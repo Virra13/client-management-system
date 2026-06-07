@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>>Client create</title>
+
+    <link rel="stylesheet"
+          href="/css/styles.css"
+          th:href="@{/css/styles.css}">
+
+</head>
+<body>
+
+<section class="main-section">
+    <div class="container">
+
+        <h2 class="header">Client create</h2>
+        <form th:action="@{/}" method="post">
+            <label for="client_name">ФИО:</label>
+            <input type="text" id="client_name" name="client_name" required>
+            <br><br>
+
+            <label for="client_type">Тип клиента:</label>
+
+            <select id="client_type" name="client_type">
+                <option value="PERSON">Физическое лицо</option>
+                <option value="BUSINESS">Юридическое лицо</option>
+
+            </select> <br><br>
+
+            <label for="ip">Айпи-адрес:</label>
+            <input type="text" id="ip" name="ip"><br><br>
+            <label for="mac">Мак-адрес:</label>
+            <input type="text" id="mac" name="mac"><br><br>
+            <label for="model">Модель устройства:</label>
+            <input type="text" id="model" name="model"><br><br>
+            <label for="address">Адрес:</label>
+            <input type="text" id="address" name="address"><br><br>
+
+            <button type="submit">Создать</button>
+        </form>
+        <p th:if="${error}" style="color:red;" th:text="${error}"></p>
+    </div>
+</section>
+</body>
+</html>

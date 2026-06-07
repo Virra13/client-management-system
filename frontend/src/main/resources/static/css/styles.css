@@ -1,0 +1,29 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+}
+
+.header {
+    color: #007bff;
+    text-align: center;
+}
+
+.container {
+    max-width: 1170px;
+    width: 100%;
+    margin: auto;
+    padding: 0 15px;
+}
+
+@media (max-width: 768px) {
+    th, td {
+        padding: 8px 6px;
+        font-size: 12px;
+    }
+
+    .container {
+        padding: 0 10px;
+    }
+}

@@ -1,0 +1,12 @@
+  server:
+    port: 8081
+
+  spring:
+    application:
+      name: uiSpring
+
+  back-service:
+    base-url: http://127.0.0.1:8080
+    timeouts:
+      connect: 5s
+      read: 10s
