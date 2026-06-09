@@ -1,7 +1,6 @@
-package com.uiSpring.service;
+package com.clientmanagement.frontend.service;
 
-import com.uiSpring.model.ClientModel;
-import com.uiSpring.model.dto.ClientDto;
+import com.clientmanagement.frontend.model.dto.ClientDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,4 +14,5 @@ Optional<ClientDto> getClientById (Long id);
 
 Optional<ClientDto> create(ClientDto clientDto);
 
+void deleteClientById(Long clientId);
 }

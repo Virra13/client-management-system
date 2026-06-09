@@ -1,11 +1,10 @@
-package com.backEndSpring.model.dto;
+package com.clientmanagement.backend.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 

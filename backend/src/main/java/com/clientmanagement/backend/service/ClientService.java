@@ -1,7 +1,6 @@
-package com.backEndSpring.service;
+package com.clientmanagement.backend.service;
 
-import com.backEndSpring.model.dto.ClientDto;
-import com.backEndSpring.model.entity.ClientEntity;
+import com.clientmanagement.backend.model.dto.ClientDto;
 
 import java.util.List;
 import java.util.Optional;

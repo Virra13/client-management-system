@@ -1,21 +1,19 @@
-package com.uiSpring.service;
+package com.clientmanagement.frontend.service;
 
-import com.uiSpring.ValidationErrorResponse;
-import com.uiSpring.ValidationException;
-import com.uiSpring.model.ClientModel;
-import com.uiSpring.model.dto.AddressDto;
-import com.uiSpring.model.dto.ClientDto;
-import com.uiSpring.rest_client.ExternalApiException;
+import com.clientmanagement.frontend.ValidationErrorResponse;
+import com.clientmanagement.frontend.ValidationException;
+import com.clientmanagement.frontend.model.dto.ClientDto;
+import com.clientmanagement.frontend.rest_client.ExternalApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.server.ResponseStatusException;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
@@ -23,7 +21,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -53,21 +50,24 @@ public class ClientApiClient implements ClientService {
     @Override
     public Optional<ClientDto> getClientById(Long id) {
 
-
-        return Optional.ofNullable(restClient.get()
+        Optional<ClientDto> client = Optional.ofNullable(restClient.get()
                 .uri("/api/clients/{id}", id)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, this::handleErrorResponse)
                 .onStatus(HttpStatusCode::is5xxServerError, this::handleErrorResponse)
                 .body(ClientDto.class));
+
+        log.info("✅ Получен клиент id {}", id);
+        return client;
     }
+
 
     @Override
     public Optional<ClientDto> create(ClientDto clientDto) {
 
         try {
             ClientDto created = restClient.post()
-                    .uri("/api/clients/create")
+                    .uri("/api/clients")
                     .body(clientDto)
                     .retrieve()
                     // Кастомный обработчик для клиентских ошибок
@@ -136,6 +136,18 @@ public class ClientApiClient implements ClientService {
         }
     }
 
+    @Override
+    public void deleteClientById(Long clientId) {
+        restClient.delete()
+                .uri("/api/clients/{id}", clientId)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, this::handleErrorResponse)
+                .onStatus(HttpStatusCode::is5xxServerError, this::handleErrorResponse)
+                .toBodilessEntity();
+
+        log.info("✅ Пользователь id={} успешно удален!", clientId);
+    }
+
     private void handleErrorResponse(HttpRequest request, ClientHttpResponse response) {
         HttpStatusCode code = null;
 
@@ -143,6 +155,13 @@ public class ClientApiClient implements ClientService {
             code = response.getStatusCode();
             // Читаем тело ответа для включения в исключение (отладка/логирование)
             String body = new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8);
+
+            if (code.value() == 404) {
+                log.error("❌ Ресурс не найден");
+                throw new ResponseStatusException(
+                         HttpStatus.NOT_FOUND,
+                        "Ресурс не найден");
+            }
 
             String errorType = code.is4xxClientError() ? "🔴 Client error" : "🔥 Server error";
             log.error("{}: {} | URL: {} | Тело: {}",

@@ -1,7 +1,6 @@
-package com.backEndSpring.service;
+package com.clientmanagement.backend.service;
 
-import com.backEndSpring.model.dto.AddressDto;
-import com.backEndSpring.model.dto.ClientDto;
+import com.clientmanagement.backend.model.dto.AddressDto;
 
 public interface AddressService {
 

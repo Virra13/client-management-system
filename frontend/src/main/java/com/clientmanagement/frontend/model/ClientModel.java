@@ -1,6 +1,6 @@
-package com.uiSpring.model;
+package com.clientmanagement.frontend.model;
 
-import com.uiSpring.model.dto.ClientType;
+import com.clientmanagement.frontend.model.dto.ClientType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

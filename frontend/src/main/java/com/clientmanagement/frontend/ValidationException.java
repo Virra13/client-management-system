@@ -1,4 +1,4 @@
-package com.uiSpring;
+package com.clientmanagement.frontend;
 
 import lombok.Getter;
 import java.util.List;

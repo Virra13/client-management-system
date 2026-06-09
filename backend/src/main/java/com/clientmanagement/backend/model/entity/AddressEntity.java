@@ -1,4 +1,4 @@
-package com.backEndSpring.model.entity;
+package com.clientmanagement.backend.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

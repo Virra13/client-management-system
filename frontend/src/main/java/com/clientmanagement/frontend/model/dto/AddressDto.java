@@ -1,4 +1,4 @@
-package com.uiSpring.model.dto;
+package com.clientmanagement.frontend.model.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

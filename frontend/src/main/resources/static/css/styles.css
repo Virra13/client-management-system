@@ -1,17 +1,6 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 20px;
-}
 
-.header {
-    color: #007bff;
-    text-align: center;
-}
 
 .container {
-    max-width: 1170px;
     width: 100%;
     margin: auto;
     padding: 0 15px;
@@ -26,4 +15,60 @@ body {
     .container {
         padding: 0 10px;
     }
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: white;
+    padding: 24px 32px;
+    border-radius: 12px;
+    min-width: 320px;
+    max-width: 500px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+}
+
+.modal-content button {
+    padding: 8px 24px;
+    cursor: pointer;
+}
+
+.clients-table {
+    table-layout: auto;
+    border: 3px solid #000000;
+    border-collapse: collapse;
+}
+
+.clients-table th:first-child,
+.clients-table td:first-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.clients-table tbody tr.client-start {
+    border-top: 2px solid #999;
+}
+
+
+.clients-table thead th {
+    --bs-table-bg: #B0C4DE;
+    background-color: #B0C4DE;
+    border-bottom: 3px solid #999;
 }

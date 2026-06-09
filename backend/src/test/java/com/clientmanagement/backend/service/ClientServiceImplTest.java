@@ -1,17 +1,14 @@
-package com.backEndSpring.service;
+package com.clientmanagement.backend.service;
 
-import com.backEndSpring.model.dto.ClientDto;
-import com.backEndSpring.model.entity.ClientEntity;
-import com.backEndSpring.repository.ClientRepository;
+import com.clientmanagement.backend.model.dto.ClientDto;
+import com.clientmanagement.backend.model.entity.ClientEntity;
+import com.clientmanagement.backend.repository.ClientRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.NoSuchElementException;

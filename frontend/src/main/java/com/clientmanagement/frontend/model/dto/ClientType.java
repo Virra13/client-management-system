@@ -1,4 +1,4 @@
-package com.uiSpring.model.dto;
+package com.clientmanagement.frontend.model.dto;
 
 public enum ClientType {
     PERSON ("Физическое лицо"),

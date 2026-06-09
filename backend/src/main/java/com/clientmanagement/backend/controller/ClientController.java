@@ -1,9 +1,9 @@
-package com.backEndSpring.controller;
+package com.clientmanagement.backend.controller;
 
-import com.backEndSpring.model.dto.AddressDto;
-import com.backEndSpring.model.dto.ClientDto;
-import com.backEndSpring.service.AddressService;
-import com.backEndSpring.service.ClientService;
+import com.clientmanagement.backend.model.dto.AddressDto;
+import com.clientmanagement.backend.model.dto.ClientDto;
+import com.clientmanagement.backend.service.AddressService;
+import com.clientmanagement.backend.service.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

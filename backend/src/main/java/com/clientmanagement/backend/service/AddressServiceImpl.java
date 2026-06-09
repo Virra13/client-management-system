@@ -1,10 +1,10 @@
-package com.backEndSpring.service;
+package com.clientmanagement.backend.service;
 
-import com.backEndSpring.model.dto.AddressDto;
-import com.backEndSpring.model.entity.AddressEntity;
-import com.backEndSpring.model.entity.ClientEntity;
-import com.backEndSpring.repository.AddressRepository;
-import com.backEndSpring.repository.ClientRepository;
+import com.clientmanagement.backend.model.dto.AddressDto;
+import com.clientmanagement.backend.model.entity.AddressEntity;
+import com.clientmanagement.backend.model.entity.ClientEntity;
+import com.clientmanagement.backend.repository.AddressRepository;
+import com.clientmanagement.backend.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

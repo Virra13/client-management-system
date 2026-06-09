@@ -1,6 +1,6 @@
-package com.backEndSpring.repository;
+package com.clientmanagement.backend.repository;
 
-import com.backEndSpring.model.entity.ClientEntity;
+import com.clientmanagement.backend.model.entity.ClientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

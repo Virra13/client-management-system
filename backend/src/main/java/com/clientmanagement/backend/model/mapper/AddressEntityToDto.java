@@ -1,7 +1,7 @@
-package com.backEndSpring.model.mapper;
+package com.clientmanagement.backend.model.mapper;
 
-import com.backEndSpring.model.dto.AddressDto;
-import com.backEndSpring.model.entity.AddressEntity;
+import com.clientmanagement.backend.model.dto.AddressDto;
+import com.clientmanagement.backend.model.entity.AddressEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;

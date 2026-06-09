@@ -1,8 +1,8 @@
-package com.uiSpring.model.mapper;
+package com.clientmanagement.frontend.model.mapper;
 
-import com.uiSpring.model.ClientModel;
-import com.uiSpring.model.dto.AddressDto;
-import com.uiSpring.model.dto.ClientDto;
+import com.clientmanagement.frontend.model.ClientModel;
+import com.clientmanagement.frontend.model.dto.AddressDto;
+import com.clientmanagement.frontend.model.dto.ClientDto;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;

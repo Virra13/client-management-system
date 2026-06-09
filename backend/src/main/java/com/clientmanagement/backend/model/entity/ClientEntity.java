@@ -1,6 +1,6 @@
-package com.backEndSpring.model.entity;
+package com.clientmanagement.backend.model.entity;
 
-import com.backEndSpring.model.dto.ClientType;
+import com.clientmanagement.backend.model.dto.ClientType;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package com.backEndSpring.controller.exception;
+package com.clientmanagement.backend.controller.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

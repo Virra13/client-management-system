@@ -1,6 +1,6 @@
-package com.backEndSpring.repository;
+package com.clientmanagement.backend.repository;
 
-import com.backEndSpring.model.dto.ClientType;
+import com.clientmanagement.backend.model.dto.ClientType;
 
 import java.time.LocalDate;
 

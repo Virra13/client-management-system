@@ -1,9 +1,9 @@
-package com.backEndSpring.model.mapper;
+package com.clientmanagement.backend.model.mapper;
 
-import com.backEndSpring.model.dto.AddressDto;
-import com.backEndSpring.model.dto.ClientDto;
-import com.backEndSpring.model.entity.AddressEntity;
-import com.backEndSpring.model.entity.ClientEntity;
+import com.clientmanagement.backend.model.dto.AddressDto;
+import com.clientmanagement.backend.model.dto.ClientDto;
+import com.clientmanagement.backend.model.entity.AddressEntity;
+import com.clientmanagement.backend.model.entity.ClientEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

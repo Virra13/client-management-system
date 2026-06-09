@@ -1,4 +1,4 @@
-package com.backEndSpring.model.dto;
+package com.clientmanagement.backend.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package com.backEndSpring.repository;
+package com.clientmanagement.backend.repository;
 
-import com.backEndSpring.model.entity.AddressEntity;
+import com.clientmanagement.backend.model.entity.AddressEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AddressRepository extends JpaRepository<AddressEntity, Long> {

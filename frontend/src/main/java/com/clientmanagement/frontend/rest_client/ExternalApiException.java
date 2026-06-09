@@ -1,4 +1,4 @@
-package com.uiSpring.rest_client;
+package com.clientmanagement.frontend.rest_client;
 
 import org.springframework.http.HttpStatusCode;
 
