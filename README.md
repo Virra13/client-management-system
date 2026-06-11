@@ -25,7 +25,7 @@ Client Management System — клиент-серверное приложени�
 <tr>
 <td valign="top">
 
-<h3>*Backend*</h3>
+<h3>Backend</h3>
 
 <ul>
 <li>Java 21</li>
@@ -44,11 +44,22 @@ Client Management System — клиент-серверное приложени�
 
 <td valign="top">
 
-<h3>*Frontend*</h3>
+<h3>Frontend</h3>
 
 <ul>
 <li>Java 21</li>
-<li>Spring 
+<li>Spring Boot</li>
+<li>Spring Web</li>
+<li>Thymeleaf</li>
+<li>RestClient</li>
+<li>HTML/CSS</li>
+<li>Bootstrap</li>
+<li>Maven</li>
+</ul>
+
+</td>
+</tr>
+</table>
 
 ## Архитектура
 ### Backend
