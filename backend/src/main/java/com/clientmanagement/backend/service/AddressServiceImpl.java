@@ -11,7 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,24 +29,50 @@ public class AddressServiceImpl implements AddressService {
     private final Function<AddressEntity, AddressDto> addressEntityAddressDtoFunction;
 
     @Override
-    public void update(Long clientId, Long addressId, AddressDto dto) {
+    public void update(Long clientId, List<AddressDto> addressDto) {
 
-        if (dto == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Тело запроса не должно быть пустым");
+        ClientEntity client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Клиент не найден"));
+        Set<AddressEntity> existingAddresses = client.getAddresses();
+
+        Set<Long> incomingIds = addressDto.stream()
+                .map(AddressDto::getAddressId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+
+        existingAddresses.removeIf(address ->
+                !incomingIds.contains(address.getAddressId())
+        );
+
+        Map<Long, AddressEntity> existingById = existingAddresses.stream()
+                .collect(Collectors.toMap(AddressEntity::getAddressId, Function.identity()));
+
+        for (AddressDto dto : addressDto) {
+            if (dto.getAddressId() == null) {
+                AddressEntity newAddress = new AddressEntity();
+                newAddress.setClient(client);
+                newAddress.setIp(dto.getIp());
+                newAddress.setMac(dto.getMac());
+                newAddress.setModel(dto.getModel());
+                newAddress.setAddress(dto.getAddress());
+
+                existingAddresses.add(newAddress);
+            } else {
+                AddressEntity address = existingById.get(dto.getAddressId());
+
+                if (address == null) {
+                    throw new ResponseStatusException(
+                            HttpStatus.NOT_FOUND,
+                            "Адрес не найден у указанного клиента"
+                    );
+                }
+                address.setIp(dto.getIp());
+                address.setMac(dto.getMac());
+                address.setModel(dto.getModel());
+                address.setAddress(dto.getAddress());
+            }
         }
-
-        AddressEntity address = addressRepository.findById(addressId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Адрес не найден"));
-
-        if (!address.getClient().getClientId().equals(clientId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Адрес не найден у указанного клиента");
-        }
-
-        address.setIp(dto.getIp());
-        address.setMac(dto.getMac());
-        address.setModel(dto.getModel());
-        address.setAddress(dto.getAddress());
-        addressRepository.save(address);
     }
 
     @Override
@@ -53,7 +84,7 @@ public class AddressServiceImpl implements AddressService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Адрес не найден у указанного клиента");
         }
 
-       addressRepository.delete(address);
+        addressRepository.delete(address);
     }
 
     @Override

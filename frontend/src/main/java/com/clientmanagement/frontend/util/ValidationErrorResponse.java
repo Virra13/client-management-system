@@ -1,4 +1,4 @@
-package com.clientmanagement.frontend;
+package com.clientmanagement.frontend.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,4 +1,4 @@
-package com.clientmanagement.frontend;
+package com.clientmanagement.frontend.util;
 
 import lombok.Getter;
 import java.util.List;

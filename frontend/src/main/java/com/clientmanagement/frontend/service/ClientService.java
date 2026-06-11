@@ -15,4 +15,11 @@ Optional<ClientDto> getClientById (Long id);
 Optional<ClientDto> create(ClientDto clientDto);
 
 void deleteClientById(Long clientId);
+
+List<ClientDto> search (String clientType, String clientName, String address);
+
+void updateClient (Long id, ClientDto clientDto);
+
 }
+
+

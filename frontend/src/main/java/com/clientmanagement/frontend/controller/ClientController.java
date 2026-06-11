@@ -1,6 +1,5 @@
 package com.clientmanagement.frontend.controller;
 
-import com.clientmanagement.frontend.ValidationException;
 import com.clientmanagement.frontend.model.ClientModel;
 import com.clientmanagement.frontend.model.dto.ClientDto;
 import com.clientmanagement.frontend.service.ClientService;
@@ -43,9 +42,10 @@ public class ClientController {
         return "all_clients_page";
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/clients/{id}")
     public String getClientById(@PathVariable Long id, Model model) {
         log.info("🌐 Запрошена информация о пользователе {}", id);
+        long startTime = System.currentTimeMillis();
 
         ClientDto client = clientService.getClientById(id)
                 .orElseThrow(() ->
@@ -55,23 +55,46 @@ public class ClientController {
                         ));
 
         model.addAttribute("clientsCollection", List.of(client));
+
+        long duration = System.currentTimeMillis() - startTime;
+        log.info("✅ Страница подготовлена за {} мс", duration);
+
         return "all_clients_page";
     }
 
 
     @GetMapping(path = "/create")
     public String getClientCreatePage() {
+        log.info("🌐 Запрошена страница создания пользователя");
         return "client_create_page";
     }
 
+    @GetMapping(path = "/clients/{id}/edit")
+    public String getClientUpdatePage(@PathVariable Long id, Model model) {
+        log.info("🌐 Запрошено редактирование пользоваетля {}", id);
 
-    @PostMapping(value = "/")
+        ClientDto client = clientService.getClientById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Клиент не найден"
+                        ));
+
+        model.addAttribute("clientDto", client);
+
+        return "client_update_page";
+    }
+
+
+    @PostMapping("/clients/{id}/edit")
     @ResponseBody
-    public ResponseEntity<?> createClientAjax(
+    public ResponseEntity<?> updateClient(
+            @PathVariable Long id,
             @Valid @ModelAttribute ClientDto clientDto,
             BindingResult bindingResult
     ) {
         log.info("DTO из формы: {}", clientDto);
+        log.info("🌐 Проверка валидности введенных данных");
 
         if (clientDto.getAddresses() == null) {
             clientDto.setAddresses(new ArrayList<>());
@@ -90,6 +113,39 @@ public class ClientController {
                     .badRequest()
                     .body(fieldErrors);
         }
+        log.info("✅ Данные успешно прошли валидацию");
+        clientService.updateClient(id, clientDto);
+        log.info("✅ Пользователь {} отредактирован", id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/")
+    @ResponseBody
+    public ResponseEntity<?> createClientAjax(
+            @Valid @ModelAttribute ClientDto clientDto,
+            BindingResult bindingResult
+    ) {
+        log.info("DTO из формы: {}", clientDto);
+        log.info("🌐 Проверка валидности введенных данных");
+
+        if (clientDto.getAddresses() == null) {
+            clientDto.setAddresses(new ArrayList<>());
+        }
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> fieldErrors = new HashMap<>();
+
+            bindingResult.getFieldErrors()
+                    .forEach(error -> fieldErrors.put(
+                            error.getField(),
+                            error.getDefaultMessage()
+                    ));
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(fieldErrors);
+        }
+        log.info("✅ Данные успешно прошли валидацию");
         try {
             clientService.create(clientDto);
             log.info("Клиент успешно создан");
@@ -103,64 +159,21 @@ public class ClientController {
 
     @PostMapping("/clients/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        log.info("🌐 Удаление клиента с id {}", id);
         clientService.deleteClientById(id);
         redirectAttributes.addFlashAttribute("success", "Клиент успешно удалён");
         return "redirect:/";
     }
+
+    @PostMapping("/clients/search")
+    public String findByRequest (        @RequestParam(required = false) String clientType,
+                                         @RequestParam(required = false) String clientName,
+                                         @RequestParam(required = false) String address,
+                                         Model model) {
+        log.info("🌐 Поиск клиента по данным: тип клиента {}, имя клиента {}, адрес клиента {}", clientType, clientName, address);
+        List<ClientDto> clients = clientService.search(clientType, clientName, address);
+        model.addAttribute("clientsCollection", clients);
+
+        return "all_clients_page";
+    }
 }
-
-//clients/{id}/delete
-
-//    public String createClient(@RequestParam("client_name") String clientName,
-//                               @RequestParam("client_type") ClientType clientType,
-//                               @RequestParam("ip") String ip,
-//                               @RequestParam("mac") String mac,
-//                               @RequestParam("model") String model,
-//                               @RequestParam("address") String address,
-//                               Model clientmodel) {
-//
-//        ClientModel clientModel = ClientModel.builder()
-//                .clientName(clientName)
-//                .clientType(clientType)
-//                .ip(ip)
-//                .mac(mac)
-//                .model(model)
-//                .address(address)
-//                .build();
-
-//    public String createClient(
-//            @Valid @ModelAttribute ClientDto clientDto,
-//            BindingResult bindingResult,
-//            Model model) {
-//
-//        if (bindingResult.hasErrors()) {
-//            model.addAttribute("error", "Ошибка валидации данных");
-//            model.addAttribute("formData", model);
-//            return "client_create_page";
-//        }
-//
-//        clientService.create(clientDto);
-//        return "redirect:/";
-//
-//        try { clientService.create(clientDto);
-//
-//            log.info("✅ Пользователь успешно создан");
-//            return "redirect:/";
-//
-//        } catch (ValidationException e) {
-//
-//            log.warn("⚠️ Ошибка валидации при создании пользователя: {}", e.getMessage());
-//            log.debug("📋 Детали ошибок: {}", e.getErrorMessages());
-//
-//            model.addAttribute("validationErrors", e.getErrorMessages());
-//            model.addAttribute("formData", model);
-//
-//           log.info("🔙 Возврат на страницу валидации с ошибками");
-//            return "client-create";
-//            //return "clients_validation_errors";
-//
-//        } catch (Exception e) {
-//            log.error("💥 Неожиданная ошибка при создании пользователя", e);
-//            throw e;
-//       }
-//    }

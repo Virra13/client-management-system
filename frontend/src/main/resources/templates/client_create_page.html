@@ -66,9 +66,15 @@
 
                 <br>
 
+                <div class="d-flex align-items-center gap-3 mb-4">
                 <button type="submit" class="btn btn-primary">
                     Создать
                 </button>
+
+                <a href="/" class="btn btn-primary">
+                    Вернуться к списку клиентов
+                </a>
+                </div>
 
             </form>
 
@@ -78,14 +84,14 @@
     <p th:if="${error}" style="color:red;" th:text="${error}"></p>
 
 </div>
-
+<!--
 <div id="errorModal" class="modal hidden">
     <div class="modal-content">
         <p id="modalMessage">Ошибка</p>
         <button type="button" onclick="closeModal()">OK</button>
     </div>
 </div>
-
+-->
 <script>
     const form = document.getElementById("clientCreateForm");
 
@@ -111,10 +117,10 @@
         if (contentType && contentType.includes("application/json")) {
             const errors = await response.json();
             showFieldErrors(errors);
-        } else {
+        } /* {
             const message = await response.text();
             showModal(message);
-        }
+        }*/
     });
 
     function showFieldErrors(errors) {
@@ -131,6 +137,9 @@
             field.classList.add("is-invalid");
 
             const container = field.closest(".mb-3");
+            if (!container) {
+                continue;
+            }
             const feedback = container.querySelector(".invalid-feedback");
 
             if (feedback) {
@@ -146,15 +155,16 @@
         document.querySelectorAll(".invalid-feedback")
             .forEach(feedback => feedback.textContent = "");
     }
+    /*
+        function showModal(message) {
+            document.getElementById("modalMessage").textContent = message;
+            document.getElementById("errorModal").classList.remove("hidden");
+        }
 
-    function showModal(message) {
-        document.getElementById("modalMessage").textContent = message;
-        document.getElementById("errorModal").classList.remove("hidden");
-    }
-
-    function closeModal() {
-        document.getElementById("errorModal").classList.add("hidden");
-    }
+        function closeModal() {
+            document.getElementById("errorModal").classList.add("hidden");
+        }
+       */
 </script>
 
 <script>
@@ -193,10 +203,10 @@
                     <input class="form-control"
                            type="text"
                            name="addresses[${addressIndex}].mac"
-                           id="ip_${addressIndex}"
+                           id="mac_${addressIndex}"
                            placeholder="AA-BB-CC-DD-EE-FF"
                            maxlength="17">
-                    <label for="ip_${addressIndex}">Мак-адрес</label>
+                    <label for="mac_${addressIndex}">Мак-адрес</label>
                     <div class="form-text">Формат: AA-BB-CC-DD-EE-FF</div>
                     <div class="invalid-feedback"></div>
                 </div>
@@ -205,9 +215,9 @@
                     <input class="form-control"
                            type="text"
                            name="addresses[${addressIndex}].model"
-                           id="ip_${addressIndex}"
+                           id="model_${addressIndex}"
                            placeholder="Модель устройства">
-                    <label for="ip_${addressIndex}">Модель устройства</label>
+                    <label for="model_${addressIndex}">Модель устройства</label>
                     <div class="invalid-feedback"></div>
                 </div>
 
@@ -215,9 +225,9 @@
                     <input class="form-control"
                            type="text"
                            name="addresses[${addressIndex}].address"
-                           id="ip_${addressIndex}"
+                           id="address_${addressIndex}"
                            placeholder="Адрес">
-                    <label  for="ip_${addressIndex}">Адрес</label>
+                    <label  for="address_${addressIndex}">Адрес</label>
                     <div class="invalid-feedback"></div>
                 </div>
 

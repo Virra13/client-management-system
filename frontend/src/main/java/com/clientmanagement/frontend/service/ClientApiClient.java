@@ -1,7 +1,7 @@
 package com.clientmanagement.frontend.service;
 
-import com.clientmanagement.frontend.ValidationErrorResponse;
-import com.clientmanagement.frontend.ValidationException;
+import com.clientmanagement.frontend.util.ValidationErrorResponse;
+import com.clientmanagement.frontend.util.ValidationException;
 import com.clientmanagement.frontend.model.dto.ClientDto;
 import com.clientmanagement.frontend.rest_client.ExternalApiException;
 import lombok.RequiredArgsConstructor;
@@ -30,21 +30,22 @@ public class ClientApiClient implements ClientService {
     private final RestClient restClient;
 
     @Override
-    public List<ClientDto>  getAllClient() {
+    public List<ClientDto> getAllClient() {
 
         List<ClientDto> clients = restClient.get()
                 .uri("/api/clients")
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, this::handleErrorResponse)
                 .onStatus(HttpStatusCode::is5xxServerError, this::handleErrorResponse)
-                .body(new ParameterizedTypeReference<List<ClientDto>>() {});
+                .body(new ParameterizedTypeReference<List<ClientDto>>() {
+                });
 
 //        Stream<ClientDto> resultStream = clients != null ? clients.stream() : Stream.empty();
 
         long count = clients != null ? clients.size() : 0;
         log.info("✅ Получено {} клиентов", count);
 
-        return  clients == null ? List.of() : clients;
+        return clients == null ? List.of() : clients;
     }
 
     @Override
@@ -148,42 +149,79 @@ public class ClientApiClient implements ClientService {
         log.info("✅ Пользователь id={} успешно удален!", clientId);
     }
 
-    private void handleErrorResponse(HttpRequest request, ClientHttpResponse response) {
-        HttpStatusCode code = null;
+    @Override
+    public List<ClientDto> search(String clientType, String clientName, String address) {
 
-        try {
-            code = response.getStatusCode();
-            // Читаем тело ответа для включения в исключение (отладка/логирование)
-            String body = new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8);
-
-            if (code.value() == 404) {
-                log.error("❌ Ресурс не найден");
-                throw new ResponseStatusException(
-                         HttpStatus.NOT_FOUND,
-                        "Ресурс не найден");
-            }
-
-            String errorType = code.is4xxClientError() ? "🔴 Client error" : "🔥 Server error";
-            log.error("{}: {} | URL: {} | Тело: {}",
-                    errorType, code, request.getURI(), body);
-
-            // Выбрасываем предметное исключение с полной информацией об ошибке
-            throw new ExternalApiException(
-                    errorType + ": " + code,
-                    code,
-                    body
-            );
-
-        } catch (IOException e) {
-            // Если не удалось прочитать тело ответа (например, оно уже прочитано)
-            log.error("❌ Не удалось прочитать тело ошибки для статуса {}", code, e);
-
-            throw new ExternalApiException(
-                    "Failed to read error response",
-                    code,
-                    null,
-                    e // Сохраняем исходное исключение как причину
-            );
-        }
+        List<ClientDto> clients = restClient.get()
+                .uri(uriBuilder -> {
+                    uriBuilder.path("/api/clients/search");
+                    if (clientName != null && !clientName.isBlank()) {
+                        uriBuilder.queryParam("client_name", clientName);
+                    }
+                    if (clientType != null && !clientType.isBlank()) {
+                        uriBuilder.queryParam("client_type", clientType);
+                    }
+                    if (address != null && !address.isBlank()) {
+                        uriBuilder.queryParam("address", address);
+                    }
+                    return uriBuilder.build();
+                })
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, this::handleErrorResponse)
+                .onStatus(HttpStatusCode::is5xxServerError, this::handleErrorResponse)
+                .body(new ParameterizedTypeReference<List<ClientDto>>() {
+                });
+        return clients == null ? List.of() : clients;
     }
-}
+
+    @Override
+    public void updateClient(Long id, ClientDto clientDto) {
+
+         restClient.put()
+                .uri("/api/clients/{id}", id)
+                .body(clientDto)
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+        private void handleErrorResponse (HttpRequest request, ClientHttpResponse response){
+            HttpStatusCode code = null;
+
+            try {
+                code = response.getStatusCode();
+                // Читаем тело ответа для включения в исключение (отладка/логирование)
+                String body = new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8);
+
+                if (code.value() == 404) {
+                    log.error("❌ Ресурс не найден");
+                    throw new ResponseStatusException(
+                            HttpStatus.NOT_FOUND,
+                            "Ресурс не найден");
+                }
+
+                String errorType = code.is4xxClientError() ? "🔴 Client error" : "🔥 Server error";
+                log.error("{}: {} | URL: {} | Тело: {}",
+                        errorType, code, request.getURI(), body);
+
+                // Выбрасываем предметное исключение с полной информацией об ошибке
+                throw new ExternalApiException(
+                        errorType + ": " + code,
+                        code,
+                        body
+                );
+
+            } catch (IOException e) {
+                // Если не удалось прочитать тело ответа (например, оно уже прочитано)
+                log.error("❌ Не удалось прочитать тело ошибки для статуса {}", code, e);
+
+                throw new ExternalApiException(
+                        "Failed to read error response",
+                        code,
+                        null,
+                        e // Сохраняем исходное исключение как причину
+                );
+            }
+        }
+
+
+    }

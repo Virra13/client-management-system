@@ -32,10 +32,13 @@ public class ClientServiceImplTest {
 
     private ClientServiceImpl clientService;
 
+    private AddressService addressService;
+
     @BeforeEach
     void setUp() {
         clientService = new ClientServiceImpl(
                 clientRepository,
+                addressService,
                 clientEntityToDtoFunction,
                 clientDtoToEntityFunction
         );
@@ -126,7 +129,4 @@ public class ClientServiceImplTest {
         verify(clientRepository).findById(clientId);
         verifyNoInteractions(clientEntityToDtoFunction);
     }
-
-
-
 }

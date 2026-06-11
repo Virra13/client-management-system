@@ -43,7 +43,7 @@ public class ClientEntity {
     /**
      * Список адресов, связанных с клиентом.
      */
-    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("addressId ASC")
     private Set<AddressEntity> addresses = new LinkedHashSet<>();
 }

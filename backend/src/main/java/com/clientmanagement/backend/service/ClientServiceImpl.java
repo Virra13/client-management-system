@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
+    private final AddressService addressService;
     private final Function<ClientEntity, ClientDto> clientEntityToDtoFunction;
     private final Function<ClientDto, ClientEntity> clientDtoToEntityFunction;
 
@@ -99,12 +100,16 @@ public class ClientServiceImpl implements ClientService {
         return new ArrayList<>(clients.values());
     }
 
+    @Transactional
     @Override
     public void update(Long clientId, ClientDto clientDto) {
         ClientEntity client = clientRepository.findById(clientId)
                 .orElseThrow();
+
         client.setClientName(clientDto.getClientName().trim());
         client.setClientType(clientDto.getClientType());
+
+        addressService.update(clientId, clientDto.getAddresses());
         clientRepository.save(client);
     }
 

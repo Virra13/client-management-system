@@ -77,16 +77,16 @@ public class ClientController {
         clientService.update(id, dto);
     }
 
-    //Обновить данные конкретного адреса
-    @PutMapping("/{id}/addresses/{addressId}")
-    public void updateAddress(
-            @PathVariable Long id,
-            @PathVariable Long addressId,
-            @Valid @RequestBody AddressDto dto
-    ) {
-        log.info("Получен запрос на изменение адреса клиента id: {}", id);
-        addressService.update(id, addressId, dto);
-    }
+//    //Обновить данные конкретного адреса
+//    @PutMapping("/{id}/addresses/{addressId}")
+//    public void updateAddress(
+//            @PathVariable Long id,
+//            @PathVariable Long addressId,
+//            @Valid @RequestBody AddressDto dto
+//    ) {
+//        log.info("Получен запрос на изменение адреса клиента id: {}", id);
+//        addressService.update(id, addressId, dto);
+//    }
 
     //Удалить клиента и все его адреса
     @DeleteMapping("/{id}")

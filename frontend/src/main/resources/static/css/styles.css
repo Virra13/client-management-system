@@ -16,7 +16,7 @@
         padding: 0 10px;
     }
 }
-
+/*
 .modal {
     position: fixed;
     inset: 0;
@@ -49,7 +49,7 @@
     padding: 8px 24px;
     cursor: pointer;
 }
-
+*/
 .clients-table {
     table-layout: auto;
     border: 3px solid #000000;

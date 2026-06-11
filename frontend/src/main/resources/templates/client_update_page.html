@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Client create</title>
+
+  <link rel="stylesheet"
+        href="/css/styles.css"
+        th:href="@{/css/styles.css}">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-4">
+
+  <h2 class="text-center text-primary my-4">Редактирование клиента</h2>
+
+  <div class="card">
+    <div class="card-body">
+
+      <form id="clientUpdateForm"
+            th:action="@{/clients/{id}/edit(id=${clientDto.clientId})}"
+            th:object="${clientDto}"
+            method="post"
+            novalidate>
+
+        <div class="form-floating mb-3">
+          <input class="form-control"
+                 type="text"
+                 th:field="*{clientName}"
+                 id="client_name"
+                 placeholder="ФИО"
+                 maxlength="100"
+                 required>
+          <label for="client_name">ФИО:</label>
+
+          <div class="invalid-feedback"></div>
+
+        </div>
+
+        <div class="form-floating mb-3">
+          <select class="form-select"
+                  th:field="*{clientType}"
+                  id="client_type"
+                  required>
+            <option value="PERSON">Физическое лицо</option>
+            <option value="BUSINESS">Юридическое лицо</option>
+          </select>
+          <label for="client_type">Тип клиента:</label>
+
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <div id="addressesContainer">
+
+          <div class="card mb-3"
+               th:each="address, stat : *{addresses}">
+
+            <div class="card-body">
+
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0" th:text="'Адрес ' + ${stat.count}">Адрес</h5>
+                <button type="button"
+                        class="btn btn-outline-secondary btn-sm"
+                        onclick="this.closest('.card').remove()">
+                  Удалить адрес
+                </button>
+              </div>
+
+              <input type="hidden"
+                     th:field="*{addresses[__${stat.index}__].addressId}">
+
+              <input type="hidden"
+                     th:field="*{addresses[__${stat.index}__].clientId}">
+
+              <div class="form-floating mb-3">
+                <input class="form-control"
+                       type="text"
+                       th:field="*{addresses[__${stat.index}__].ip}"
+                       th:id="'ip_' + ${stat.index}"
+                       placeholder="192.168.0.1">
+                <label th:for="'ip_' + ${stat.index}">Айпи-адрес</label>
+                <div class="invalid-feedback"></div>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input class="form-control"
+                       type="text"
+                       th:field="*{addresses[__${stat.index}__].mac}"
+                       th:id="'mac_' + ${stat.index}"
+                       placeholder="AA-BB-CC-DD-EE-FF">
+                <label th:for="'mac_' + ${stat.index}">Мак-адрес</label>
+                <div class="invalid-feedback"></div>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input class="form-control"
+                       type="text"
+                       th:field="*{addresses[__${stat.index}__].model}"
+                       th:id="'model_' + ${stat.index}"
+                       placeholder="Модель устройства">
+                <label th:for="'model_' + ${stat.index}">Модель устройства</label>
+                <div class="invalid-feedback"></div>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input class="form-control"
+                       type="text"
+                       th:field="*{addresses[__${stat.index}__].address}"
+                       th:id="'address_' + ${stat.index}"
+                       placeholder="Адрес">
+                <label th:for="'address_' + ${stat.index}">Адрес</label>
+                <div class="invalid-feedback"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <button type="button"
+                class="btn btn-outline-secondary mb-3"
+                onclick="addAddressBlock()">
+          Добавить адрес
+        </button>
+
+        <br>
+
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <button type="submit" class="btn btn-primary">
+            Сохранить изменения
+          </button>
+
+          <a href="/" class="btn btn-primary">
+            Вернуться к списку клиентов
+          </a>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <p th:if="${error}" style="color:red;" th:text="${error}"></p>
+
+
+  <script>
+    const form = document.getElementById("clientUpdateForm");
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      clearFieldErrors();
+
+      const formData = new FormData(form);
+
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: formData
+      });
+
+      if (response.ok) {
+        window.location.href = "/";
+        return;
+      }
+
+      const contentType = response.headers.get("content-type");
+
+      if (contentType && contentType.includes("application/json")) {
+        const errors = await response.json();
+        showFieldErrors(errors);
+      }
+    });
+
+    function showFieldErrors(errors) {
+      for (const fieldName in errors) {
+
+        const field = document.querySelector(
+                `[name="${fieldName}"]`
+        );
+
+        if (!field) {
+          continue;
+        }
+
+        field.classList.add("is-invalid");
+
+        const container = field.closest(".mb-3");
+        if (!container) {
+          continue;
+        }
+        const feedback = container.querySelector(".invalid-feedback");
+
+        if (feedback) {
+          feedback.textContent = errors[fieldName];
+        }
+      }
+    }
+
+    function clearFieldErrors() {
+      document.querySelectorAll(".is-invalid")
+              .forEach(field => field.classList.remove("is-invalid"));
+
+      document.querySelectorAll(".invalid-feedback")
+              .forEach(feedback => feedback.textContent = "");
+    }
+  </script>
+
+  <script th:inline="javascript">
+
+    let addressIndex = /*[[${clientDto.addresses != null ? clientDto.addresses.size() : 0}]]*/ 0;
+
+    function addAddressBlock() {
+      const container = document.getElementById("addressesContainer");
+
+      const block = document.createElement("div");
+      block.classList.add("card", "mb-3");
+
+      block.innerHTML = `
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Адрес ${addressIndex + 1}</h5>
+            <button type="button"
+                    class="btn btn-outline-secondary btn-sm"
+                    onclick="this.closest('.card').remove()">
+                Удалить адрес
+            </button>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control"
+                           type="text"
+                           name="addresses[${addressIndex}].ip"
+                           id="ip_${addressIndex}"
+                           placeholder="192.168.0.1">
+                    <label for="ip_${addressIndex}">Айпи-адрес</label>
+                    <div class="form-text">Формат: 192.168.0.1</div>
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control"
+                           type="text"
+                           name="addresses[${addressIndex}].mac"
+                           id="mac_${addressIndex}"
+                           placeholder="AA-BB-CC-DD-EE-FF"
+                           maxlength="17">
+                    <label for="mac_${addressIndex}">Мак-адрес</label>
+                    <div class="form-text">Формат: AA-BB-CC-DD-EE-FF</div>
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control"
+                           type="text"
+                           name="addresses[${addressIndex}].model"
+                           id="model_${addressIndex}"
+                           placeholder="Модель устройства">
+                    <label for="model_${addressIndex}">Модель устройства</label>
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control"
+                           type="text"
+                           name="addresses[${addressIndex}].address"
+                           id="address_${addressIndex}"
+                           placeholder="Адрес">
+                    <label  for="address_${addressIndex}">Адрес</label>
+                    <div class="invalid-feedback"></div>
+                </div>
+
+            </div>
+        `;
+
+      container.appendChild(block);
+      addressIndex++;
+    }
+  </script>
+</div>
+</body>
+</html>
