@@ -115,22 +115,15 @@ spring:
 
 ### Главная страница
 
-```text
-screenshots/main-page.png
-```
+![Главная страница](screenshots/client-page.png)
 
 ### Форма создания клиента
 
-```text
-screenshots/create-client.png
-```
+![Создание клиента](screenshots/create-client.png)
 
 ### Форма редактирования клиента
 
-```text
-screenshots/edit-client.png
-```
-
+![Редактирование клиента](screenshots/edit-client.png)
 
 
 
